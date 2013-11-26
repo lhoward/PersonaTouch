@@ -12,32 +12,68 @@
 #import <CFBrowserID.h>
 
 @implementation PTAppDelegate
+{
+    id _context;
+}
+
+- init
+{
+    CFErrorRef err;
+    
+    self = [super init];
+
+    _context = CFBridgingRelease(BIDContextCreate(NULL, BID_CONTEXT_USER_AGENT | BID_CONTEXT_RP, &err));
+    
+    CFBridgingRelease(err);
+    
+    return self;
+}
 
 - (NSString *)personaGetAssertion:(NSString *)audience
                         withError:(NSError * __autoreleasing *)error
 {
-    BIDContext context;
     CFStringRef assertion;
     CFErrorRef cfErr;
     uint32_t flags;
     
-    context = BIDContextCreate(NULL, BID_CONTEXT_USER_AGENT, &cfErr);
-    if (context == NULL) {
-        *error = CFBridgingRelease(cfErr);
-        return NULL;
-    }
+    BIDSetContextParam((__bridge BIDContext)_context, BID_PARAM_PARENT_WINDOW, (__bridge void *)self.window);
     
-    BIDSetContextParam(context, BID_PARAM_PARENT_WINDOW, (__bridge void *)self.window);
-    
-    assertion = BIDAssertionCreateUI(context, (__bridge CFStringRef)audience,
+    assertion = BIDAssertionCreateUI((__bridge BIDContext)_context, (__bridge CFStringRef)audience,
                                      NULL, NULL, 0, NULL, &flags, &cfErr);
     
     if (cfErr)
         *error = CFBridgingRelease(cfErr);
     
-    CFRelease(context);
-    
     return CFBridgingRelease(assertion);
+}
+
+- (void)personaVerifyAssertion:(NSString *)assertion
+                  withAudience:(NSString *)audience
+                    andHandler:(void (^)(NSDictionary *dict, NSError *err))handler
+{
+    dispatch_queue_t q = dispatch_queue_create("com.padl.BrowserID.example", NULL);
+    
+    BIDVerifyAssertionWithHandler((__bridge BIDContext)_context,
+                                  (__bridge CFStringRef)assertion,
+                                  (__bridge CFStringRef)audience,
+                                  NULL, // channel bindings
+                                  CFAbsoluteTimeGetCurrent(),
+                                  0, // flags
+                                  q,
+                                  ^(BIDIdentity identity, uint32_t flags, CFErrorRef error) {
+                                      NSDictionary *attrs = nil;
+                                      NSError *err = nil;
+                                      
+                                      if (identity)
+                                          attrs = CFBridgingRelease(BIDIdentityCopyAttributeDictionary(identity));
+                                      if (error)
+                                          err = (__bridge NSError *)error;
+                                      
+                                      handler(attrs, err);
+                                  });
+    
+
+    return;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

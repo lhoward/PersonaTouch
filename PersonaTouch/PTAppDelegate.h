@@ -15,4 +15,8 @@
 - (NSString *)personaGetAssertion:(NSString *)audience
                         withError:(NSError * __autoreleasing *)error;
 
+- (void)personaVerifyAssertion:(NSString *)assertion
+                  withAudience:(NSString *)audience
+                    andHandler:(void (^)(NSDictionary *dict, NSError *err))handler;
+
 @end

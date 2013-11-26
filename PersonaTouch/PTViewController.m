@@ -26,6 +26,7 @@
     self.textField = [[UITextField alloc] initWithFrame:CGRectMake(10.0f, 30.0f, 300.0f, 30.0f)];
     self.textField.delegate = self;
     self.textField.borderStyle = UITextBorderStyleRoundedRect;
+    self.textField.text = @"http://www.padl.com";
     
     [self.view addSubview:self.textField];
     
@@ -41,7 +42,7 @@
     
     [self.view addSubview:button];
     
-    self.label = [[UILabel alloc] initWithFrame:CGRectMake(115.0f, 150.0f, 200.0f, 30.0f)];
+    self.label = [[UILabel alloc] initWithFrame:CGRectMake(115.0f, 150.0f, 500.0f, 50.0f)];
     self.label.text = @"";
     [self.view addSubview:self.label];
 }
@@ -53,11 +54,14 @@
     NSString *assertion;
     
     assertion = [delegate personaGetAssertion:self.textField.text withError:&error];
-    if (error)
-        self.label.text = error.description;
-    else
-        self.label.text = assertion;
-    
+    if (error) {
+        self.label.text = [error userInfo][(__bridge NSString *)kCFErrorDescriptionKey];
+    } else {
+        [delegate personaVerifyAssertion:assertion withAudience:self.textField.text andHandler:^(NSDictionary *attrs, NSError *e) {
+            NSLog(@"dict %@", attrs);
+            [self.label performSelectorOnMainThread:@selector(setText:) withObject:attrs[@"sub"] waitUntilDone:FALSE];
+        }];
+    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
