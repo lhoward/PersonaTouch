@@ -14,6 +14,7 @@
 @implementation PTAppDelegate
 {
     id _context;
+    NSData *_channelBindings;
 }
 
 - init
@@ -25,6 +26,8 @@
     _context = CFBridgingRelease(BIDContextCreate(NULL, BID_CONTEXT_USER_AGENT | BID_CONTEXT_RP, &err));
     
     CFBridgingRelease(err);
+    
+    _channelBindings = [NSData dataWithBytes:"PersonaTouch" length:sizeof("PersonaTouch") - 1];
     
     return self;
 }
@@ -39,7 +42,7 @@
     BIDSetContextParam((__bridge BIDContext)_context, BID_PARAM_PARENT_WINDOW, (__bridge void *)self.window);
     
     assertion = BIDAssertionCreateUI((__bridge BIDContext)_context, (__bridge CFStringRef)audience,
-                                     NULL, NULL, 0, NULL, &flags, &cfErr);
+                                     (__bridge CFDataRef)_channelBindings, NULL, 0, NULL, &flags, &cfErr);
     
     if (cfErr)
         *error = CFBridgingRelease(cfErr);
@@ -56,7 +59,7 @@
     BIDVerifyAssertionWithHandler((__bridge BIDContext)_context,
                                   (__bridge CFStringRef)assertion,
                                   (__bridge CFStringRef)audience,
-                                  NULL, // channel bindings
+                                  (__bridge CFDataRef)_channelBindings, // channel bindings
                                   CFAbsoluteTimeGetCurrent(),
                                   0, // flags
                                   q,

@@ -59,6 +59,7 @@
     } else {
         [delegate personaVerifyAssertion:assertion withAudience:self.textField.text andHandler:^(NSDictionary *attrs, NSError *e) {
             NSLog(@"dict %@", attrs);
+
             [self.label performSelectorOnMainThread:@selector(setText:) withObject:attrs[@"sub"] waitUntilDone:FALSE];
         }];
     }
