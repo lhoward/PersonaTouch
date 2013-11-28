@@ -379,12 +379,12 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.9.xctoolchain/usr/include,
-					/Users/lukeh/CVSRoot/moonshot/moonshot/libbrowserid,
+					/usr/local/ios/include,
 				);
 				INFOPLIST_FILE = "PersonaTouch/PersonaTouch-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/lukeh/CVSRoot/moonshot/moonshot/libbrowserid/.libs,
+					/usr/local/ios/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = arm64;
@@ -403,12 +403,12 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.9.xctoolchain/usr/include,
-					/Users/lukeh/CVSRoot/moonshot/moonshot/libbrowserid,
+					/usr/local/ios/include,
 				);
 				INFOPLIST_FILE = "PersonaTouch/PersonaTouch-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/lukeh/CVSRoot/moonshot/moonshot/libbrowserid/.libs,
+					/usr/local/ios/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = arm64;
