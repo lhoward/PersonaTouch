@@ -23,12 +23,13 @@
     
     self = [super init];
 
-    _context = CFBridgingRelease(BIDContextCreate(NULL, BID_CONTEXT_USER_AGENT | BID_CONTEXT_RP, &err));
-    
-    CFBridgingRelease(err);
-    
-    _channelBindings = [NSData dataWithBytes:"PersonaTouch" length:sizeof("PersonaTouch") - 1];
-    
+    if (self != nil) {
+        _context = CFBridgingRelease(BIDContextCreate(NULL, BID_CONTEXT_USER_AGENT | BID_CONTEXT_RP, &err));
+        CFBridgingRelease(err);
+        
+        _channelBindings = [NSData dataWithBytes:"PersonaTouch" length:sizeof("PersonaTouch") - 1];
+    }
+
     return self;
 }
 
