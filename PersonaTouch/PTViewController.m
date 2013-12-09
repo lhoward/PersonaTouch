@@ -26,7 +26,7 @@
     self.textField = [[UITextField alloc] initWithFrame:CGRectMake(10.0f, 30.0f, 300.0f, 30.0f)];
     self.textField.delegate = self;
     self.textField.borderStyle = UITextBorderStyleRoundedRect;
-    self.textField.text = @"http://www.padl.com";
+    self.textField.text = @"https://www.example.com";
     
     [self.view addSubview:self.textField];
     
