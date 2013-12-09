@@ -9,6 +9,7 @@
 #import "PTAppDelegate.h"
 #import "PTViewController.h"
 
+#import <browserid.h>
 #import <CFBrowserID.h>
 
 @implementation PTAppDelegate
